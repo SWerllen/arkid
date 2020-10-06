@@ -206,11 +206,6 @@ CORS_ALLOW_METHODS = (
     'OPTIONS',
 )
 
-CSRF_TRUSTED_ORIGINS = (
-    'localhost',
-    'localhost:30080',
-    'heart.werllenwang.xyz'
-)
 
 
 EXECUTERS = [    # 注意顺序

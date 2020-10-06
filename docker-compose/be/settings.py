@@ -3,10 +3,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'arkid',
         'USER': 'root',
-    # <----
+        # <----
         'PASSWORD': 'root',    # {.env.SQL_PWD}
         'HOST': 'arkid-db',    # {.env.INSTANCE}-db
-    # ---->
+        # ---->
         'PORT': '3306',
         'OPTIONS': {
             'autocommit': True,
@@ -25,7 +25,7 @@ REDIS_CONFIG = {
     'PASSWORD': None,
 }
 REDIS_URL = 'redis://{}:{}/{}'.format(REDIS_CONFIG['HOST'], REDIS_CONFIG['PORT'], REDIS_CONFIG['DB']) if REDIS_CONFIG['PASSWORD'] is None \
-        else 'redis://:{}@{}:{}/{}'.format(REDIS_CONFIG['PASSWORD'], REDIS_CONFIG['HOST'], REDIS_CONFIG['PORT'], REDIS_CONFIG['DB'])
+    else 'redis://:{}@{}:{}/{}'.format(REDIS_CONFIG['PASSWORD'], REDIS_CONFIG['HOST'], REDIS_CONFIG['PORT'], REDIS_CONFIG['DB'])
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -45,3 +45,10 @@ INSTALLED_APPS += ['ldap.sql_backend']
 # <----
 BASE_URL = 'http://heart.werllenwang.xyz'
 # ---->
+
+CSRF_TRUSTED_ORIGINS = (
+    'localhost',
+    'localhost:8080',
+    'localhost:30080',
+    'heart.werllenwang.xyz'
+)
