@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
+from celery_app import app    # pylint: disable=wrong-import-position,unused-import
 import os
 import datetime
 from kombu import Exchange, Queue
@@ -24,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'pueg+1f_su-h_=wxz98+gr9#f5_49f-267^%j^ry^pbcd4+wio'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 TESTING = False    # always False
 
 ALLOWED_HOSTS = ['*']
@@ -71,7 +72,8 @@ REST_FRAMEWORK = {
 
 AUTHENTICATION_BACKENDS = (
     'rules.permissions.ObjectPermissionBackend',
-    'django.contrib.auth.backends.ModelBackend',    # 保留，用于登录django admin。注意：两个体系中账号密码一样会返回django_user
+    # 保留，用于登录django admin。注意：两个体系中账号密码一样会返回django_user
+    'django.contrib.auth.backends.ModelBackend',
     'oneid.auth_backend.OneIDBasicAuthBackend',
 )
 
@@ -204,6 +206,13 @@ CORS_ALLOW_METHODS = (
     'OPTIONS',
 )
 
+CSRF_TRUSTED_ORIGINS = (
+    'localhost',
+    'localhost:30080',
+    'heart.werllenwang.xyz'
+)
+
+
 EXECUTERS = [    # 注意顺序
     'executer.RDB.RDBExecuter',
     'executer.log.rdb.RDBLogExecuter',
@@ -237,10 +246,10 @@ REDIS_CONFIG = {
     'PASSWORD': None,
 }
 
-REDIS_URL = 'redis://{}:{}/{}'.format(REDIS_CONFIG['HOST'], REDIS_CONFIG['PORT'],\
-    REDIS_CONFIG['DB']) if REDIS_CONFIG['PASSWORD'] is None \
-        else 'redis://:{}@{}:{}/{}'.format(REDIS_CONFIG['PASSWORD'],\
-            REDIS_CONFIG['HOST'], REDIS_CONFIG['PORT'], REDIS_CONFIG['DB'])
+REDIS_URL = 'redis://{}:{}/{}'.format(REDIS_CONFIG['HOST'], REDIS_CONFIG['PORT'],
+                                      REDIS_CONFIG['DB']) if REDIS_CONFIG['PASSWORD'] is None \
+    else 'redis://:{}@{}:{}/{}'.format(REDIS_CONFIG['PASSWORD'],
+                                       REDIS_CONFIG['HOST'], REDIS_CONFIG['PORT'], REDIS_CONFIG['DB'])
 
 
 CACHES = {
@@ -259,7 +268,6 @@ CACHES = {
 CELERY_BROKER_URL = REDIS_URL
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
-from celery_app import app    # pylint: disable=wrong-import-position,unused-import
 CELERY_TASK_QUEUES = [
     Queue('default', Exchange('default'), routing_key='default'),
     Queue('perm', Exchange('perm'), routing_key='perm'),
