@@ -43,5 +43,5 @@ INSTALLED_APPS += ['ldap.sql_backend']
 
 # 最终对外暴露的 web server 地址
 # <----
-BASE_URL = 'http://localhost'
+BASE_URL = 'http://heart.werllenwang.xyz'
 # ---->
